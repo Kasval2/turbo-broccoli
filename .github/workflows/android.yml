@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Game Package
 on:
   push:
     branches: [ main, master ]
@@ -11,21 +11,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Упаковываем файлы игры в .love
-      - name: Zip Lua files
+      - name: Create Game Zip
         run: |
-          zip -9 -r game.love . -x ".git/*" ".github/*"
+          # Упаковываем все файлы в .love файл (это и есть твоя игра)
+          zip -9 -r MyGame.love . -x ".git/*" ".github/*"
 
-      # Используем официальный способ сборки через Love2D-Android
-      - name: Build APK
-        uses: love2d-community/love-android-action@v1
-        with:
-          love_file: game.love
-          app_name: "MyClickerGame"
-          package_name: "com.kasval.clicker"
-
-      - name: Upload Artifact
+      - name: Upload Game File
         uses: actions/upload-artifact@v4
         with:
-          name: my-game-apk
-          path: "**/*.apk"
+          name: game-files
+          path: MyGame.love
